@@ -8,8 +8,8 @@ import Button from '../Button';
 const navigation = [
   { name: 'Routes', href: '/#routes' },
   { name: 'Schedule', href: '/#schedule' },
-  { name: 'About', href: '/#about' }, // Assuming About is a section on the Home page
-  { name: 'Contact', href: '/#contact' }, // Assuming Contact is a section on the Home page
+  { name: 'About', href: '/#about' }, 
+  { name: 'Contact', href: '/#contact' }, 
 ];
 
 export default function Navbar() {
@@ -17,7 +17,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) { // md breakpoint
+      if (window.innerWidth >= 768) {
         setIsMobileMenuOpen(false);
       }
     };

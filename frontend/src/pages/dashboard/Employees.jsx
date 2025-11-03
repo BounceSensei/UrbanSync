@@ -35,7 +35,7 @@ export default function Employees() {
 
     const handleSaveEmployee = async (employeeData) => {
         try {
-            setError(null); // Clear previous errors
+            setError(null); 
             if (editingEmployee) {
                 await axiosInstance.put(`/api/employees/${editingEmployee.id}`, employeeData);
                 setSuccessMessage('Employee updated successfully!');

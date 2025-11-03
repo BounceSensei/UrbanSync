@@ -35,7 +35,7 @@ const teamMembers = [
     {
         name: 'Noran, Leonardo Noserale Jr.',
         role: 'Lead Researcher/Project Manager',
-        skills: 'Jira, Confluence, Notion', // Kept for reference, but icons will be used
+        skills: 'Jira, Confluence, Notion', 
         skillIcon: ClipboardDocumentListIcon,
         imageUrl: Noran,
     },

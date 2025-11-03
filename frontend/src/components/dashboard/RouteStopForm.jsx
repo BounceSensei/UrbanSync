@@ -21,7 +21,7 @@ export default function RouteStopForm({ routeStop, onSave, onCancel, availableSt
             setTravelTimeFromPrevMin(routeStop.travelTimeFromPrevMin || '');
             setRemarks(routeStop.remarks || '');
         } else {
-            // Reset for new entry
+            
             setStopId('');
             setStopOrder('');
             setArrivalTime('');

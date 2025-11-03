@@ -87,7 +87,7 @@ const Dashboard = () => {
                         {
                             label: 'Number of Scheduled Trips',
                             data: sortedDates.map(date => scheduleCountsByDate[date]),
-                            backgroundColor: 'rgba(30, 58, 138, 0.6)', // Marine Blue
+                            backgroundColor: 'rgba(30, 58, 138, 0.6)', 
                             borderColor: 'rgba(30, 58, 138, 1)',
                             borderWidth: 1,
                             borderRadius: 4,

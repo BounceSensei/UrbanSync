@@ -29,7 +29,7 @@ export default function EmployeeForm({ employee, onSave, onCancel, apiError }) {
                 lastName: employee.lastName || '',
                 username: employee.username || '',
                 email: employee.email || '',
-                password: '', // Password is not sent for updates
+                password: '', 
                 phone: employee.phone || '',
                 address: employee.address || '',
                 dateOfBirth: employee.dateOfBirth ? employee.dateOfBirth.split('T')[0] : '',
@@ -54,7 +54,7 @@ export default function EmployeeForm({ employee, onSave, onCancel, apiError }) {
         e.preventDefault();
         const dataToSave = { ...formData };
         if (employee && !dataToSave.password) {
-            delete dataToSave.password; // Don't send empty password on update
+            delete dataToSave.password; 
         }
         onSave(dataToSave);
     };

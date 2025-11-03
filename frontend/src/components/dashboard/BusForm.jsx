@@ -30,10 +30,10 @@ export default function BusForm({ bus, onSave, onCancel, apiError }) {
         onSave({ 
             busNumber, 
             plateNumber, 
-            seatingCapacity: parseInt(seatingCapacity, 10) || null, // Handle empty string case
+            seatingCapacity: parseInt(seatingCapacity, 10) || null, 
             busType, model, 
             manufacturer, 
-            yearManufactured: parseInt(yearManufactured, 10) || null, // Handle empty string case
+            yearManufactured: parseInt(yearManufactured, 10) || null, 
             status });
     };
 

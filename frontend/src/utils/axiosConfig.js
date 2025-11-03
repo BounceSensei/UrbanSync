@@ -32,7 +32,7 @@ axiosInstance.interceptors.request.use(
     });
 
     if (token) {
-      config.headers.Authorization = token; // Token already includes 'Bearer '
+      config.headers.Authorization = token; 
     }
     return config;
   },

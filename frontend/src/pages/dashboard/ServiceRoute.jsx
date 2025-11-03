@@ -179,11 +179,11 @@ export default function ServiceRoute() {
             }
 
             setSuccessMessage('Stop order updated successfully!');
-            setRouteStops(reorderChange.after); // Persist the new order in local state
+            setRouteStops(reorderChange.after);
         } catch (err) {
             console.error('Error saving new stop order:', err);
             setError('Failed to save the new order. Please try again.');
-            await fetchRouteStops(); // Re-fetch to revert to original state on error
+            await fetchRouteStops();
         } finally {
             setIsSavingOrder(false);
             setReorderChange(null);

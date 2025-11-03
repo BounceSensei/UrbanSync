@@ -37,7 +37,7 @@ export default function Routes() {
             } else {
                 await axiosInstance.post('/api/routes', routeData);
             }
-            await fetchRoutes(); // Refresh the list
+            await fetchRoutes(); 
             closeForm();
         } catch (err) {
             console.error('Error saving route:', err);

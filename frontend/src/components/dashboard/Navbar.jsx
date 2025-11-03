@@ -13,7 +13,6 @@ export default function Navbar() {
     const handleSignOut = () => {
         logout();
         setIsProfileOpen(false);
-        // Navigate to the home page after logout
         navigate('/');
     };
 

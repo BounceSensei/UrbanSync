@@ -42,7 +42,7 @@ export default function Stops() {
                 const response = await api.post('/api/stops', stopData);
                 setSuccessMessage('Stop added successfully!');
             }
-            await fetchStops(); // Refresh the list
+            await fetchStops(); 
             closeForm();
         } catch (err) {
             console.error('Error saving stop:', err);

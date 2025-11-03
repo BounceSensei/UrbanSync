@@ -12,7 +12,7 @@ const Button = ({ children, to, onClick, type = 'button', className = '', disabl
         case 'cancel':
             themeStyles = 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400';
             break;
-        default: // 'default'
+        default: 
             themeStyles = 'bg-blue-900 text-yellow-400 hover:bg-blue-800 focus:ring-yellow-500 disabled:bg-gray-400 disabled:cursor-not-allowed';
             break;
     }

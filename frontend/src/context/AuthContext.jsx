@@ -52,8 +52,8 @@ export const AuthProvider = ({ children }) => {
       });
       
       console.log('Login response:', response.data);
-      const { token: accessToken, type, ...userData } = response.data; // Renamed 'token' to 'accessToken' during destructuring
-      const token = `${type} ${accessToken}`; // This will now work correctly
+      const { token: accessToken, type, ...userData } = response.data;
+      const token = `${type} ${accessToken}`; 
       
       // Store auth data
       localStorage.setItem('token', token);

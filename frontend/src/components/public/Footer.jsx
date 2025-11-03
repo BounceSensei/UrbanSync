@@ -4,8 +4,8 @@ import Button from '../Button';
 
 const companyLinks = [
     { name: 'About Us', href: '/#about' },
-    { name: 'Our Solution & Benefits', href: '/#solution' }, // Assuming a section with this ID exists
-    { name: 'Technology Stack', href: '/#about' }, // Linking to the tech part of the about section
+    { name: 'Our Solution & Benefits', href: '/#solution' }, 
+    { name: 'Technology Stack', href: '/#about' }, 
 ];
 
 const supportLinks = [

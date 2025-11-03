@@ -214,7 +214,7 @@ export default function PublicSchedule() {
                             value={itemsPerPage}
                             onChange={(e) => {
                                 setItemsPerPage(Number(e.target.value));
-                                setCurrentPage(1); // Reset to first page on change
+                                setCurrentPage(1); 
                             }}
                             className="rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >

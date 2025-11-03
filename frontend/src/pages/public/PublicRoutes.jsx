@@ -169,7 +169,7 @@ export default function PublicRoutes() {
                                                 <Polyline 
                                                     pathOptions={{ 
                                                         color: routeColors[index % routeColors.length],
-                                                        weight: selectedRouteId ? 5 : 3 // Make selected route line thicker
+                                                        weight: selectedRouteId ? 5 : 3 
                                                     }} 
                                                     positions={positions}
                                                 >

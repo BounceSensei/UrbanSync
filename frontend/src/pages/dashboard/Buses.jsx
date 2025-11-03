@@ -42,7 +42,7 @@ export default function Buses() {
                 const response = await axiosInstance.post('/api/buses', busData);
                 setSuccessMessage('Bus added successfully!');
             }
-            await fetchBuses(); // Refresh the list
+            await fetchBuses(); 
             closeForm();
         } catch (err) {
             console.error('Error saving bus:', err);
@@ -54,7 +54,7 @@ export default function Buses() {
     const handleEditBus = (bus) => {
         setEditingBus(bus);
         setShowForm(true);
-        setError(null); // Clear previous API errors when opening form
+        setError(null); 
     };
 
     const handleAddClick = () => {
