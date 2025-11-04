@@ -11,7 +11,7 @@ const MapFocusController = ({ selectedRouteId, routes }) => {
             const route = routes.find(r => r.id === parseInt(selectedRouteId));
             if (route) {
                 const positions = (route.stops || [])
-                    .filter(rs => rs.stop.latitude && rs.stop.longitude)
+                    .filter(rs => rs.stop && rs.stop.latitude && rs.stop.longitude)
                     .map(rs => [rs.stop.latitude, rs.stop.longitude]);
 
                 if (positions.length > 0) {
@@ -22,7 +22,7 @@ const MapFocusController = ({ selectedRouteId, routes }) => {
         } else if (routes.length > 0) {
             const allPositions = routes.flatMap(r =>
                 (r.stops || [])
-                    .filter(rs => rs.stop.latitude && rs.stop.longitude)
+                    .filter(rs => rs.stop && rs.stop.latitude && rs.stop.longitude)
                     .map(rs => [rs.stop.latitude, rs.stop.longitude])
             );
             if (allPositions.length > 0) {
@@ -91,7 +91,7 @@ export default function PublicRoutes() {
     const allPositions = useMemo(() => 
         routes.flatMap(r => 
             (r.stops || [])
-                .filter(rs => rs.stop.latitude && rs.stop.longitude)
+                .filter(rs => rs.stop && rs.stop.latitude && rs.stop.longitude)
                 .map(rs => [rs.stop.latitude, rs.stop.longitude])
         ), [routes]);
 
@@ -158,7 +158,7 @@ export default function PublicRoutes() {
                                     .filter(route => !selectedRouteId || route.id === parseInt(selectedRouteId))
                                     .map((route, index) => {
                                         const positions = (route.stops || [])
-                                            .filter(rs => rs.stop.latitude && rs.stop.longitude)
+                                            .filter(rs => rs.stop && rs.stop.latitude && rs.stop.longitude)
                                             .sort((a, b) => a.stopOrder - b.stopOrder)
                                             .map(rs => [rs.stop.latitude, rs.stop.longitude]);
 
@@ -178,7 +178,7 @@ export default function PublicRoutes() {
                                                 {(route.stops || [])
                                                     .sort((a, b) => a.stopOrder - b.stopOrder)
                                                     .map(rs => (
-                                                        rs.stop.latitude && rs.stop.longitude &&
+                                                        rs.stop && rs.stop.latitude && rs.stop.longitude &&
                                                         <Marker 
                                                             key={`route-${route.id}-stop-${rs.stop.id}-order-${rs.stopOrder}`} 
                                                             position={[rs.stop.latitude, rs.stop.longitude]}

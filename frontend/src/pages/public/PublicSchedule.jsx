@@ -58,19 +58,27 @@ const ByStopView = ({ schedules, stops, paginatedStops }) => {
         const now = new Date();
 
         schedules.forEach(schedule => {
-            if (new Date(schedule.departureDateTime) < now) return; // Skip past schedules
+            // Skip past schedules
+            if (!schedule?.departureDateTime || new Date(schedule.departureDateTime) < now) return;
+
+            // Guard: schedule must have a route with stops
+            if (!schedule.route || !Array.isArray(schedule.route.stops)) return;
 
             schedule.route.stops.forEach(routeStop => {
-                const stopId = routeStop.stop.id;
+                const stopId = routeStop?.stop?.id;
+                if (!stopId) return; // skip malformed routeStop
+
                 if (!result[stopId]) {
                     result[stopId] = [];
                 }
+
                 const arrivalTime = new Date(schedule.departureDateTime);
                 // This is a simplified calculation. A real implementation would be more complex.
-                arrivalTime.setMinutes(arrivalTime.getMinutes() + (routeStop.travelTimeFromPrevMin || 0));
+                const travelMinutes = Number(routeStop.travelTimeFromPrevMin) || 0;
+                arrivalTime.setMinutes(arrivalTime.getMinutes() + travelMinutes);
 
                 result[stopId].push({
-                    routeName: `${schedule.route.name} (${schedule.route.direction})`,
+                    routeName: `${schedule.route.name || 'Unknown Route'} (${schedule.route.direction || ''})`,
                     arrivalTime: arrivalTime,
                 });
             });
@@ -144,14 +152,18 @@ export default function PublicSchedule() {
                     return acc;
                 }, {});
 
-                // Enrich the route object within each schedule with the stops data
-                const schedulesWithFullRouteData = schedulesRes.data.map(schedule => ({
-                    ...schedule,
-                    route: {
-                        ...schedule.route,
-                        stops: (routeStopsMap[schedule.route.id] || []).sort((a, b) => a.stopOrder - b.stopOrder)
-                    }
-                }));
+                // Enrich the route object within each schedule with the stops data (guard if schedule.route missing)
+                const schedulesWithFullRouteData = schedulesRes.data.map(schedule => {
+                    const routeId = schedule.route?.id;
+                    const stopsForRoute = routeId ? (routeStopsMap[routeId] || []) : [];
+                    return {
+                        ...schedule,
+                        route: {
+                            ...schedule.route,
+                            stops: stopsForRoute.sort((a, b) => a.stopOrder - b.stopOrder)
+                        }
+                    };
+                });
 
                 setSchedules(schedulesWithFullRouteData);
                 setRoutes(routesRes.data); // The routes state is still useful for the ByStopView
