@@ -9,12 +9,14 @@ const axiosInstance = axios.create({
 window.requestLogs = [];
 
 window.addLog = (message, data) => {
-    const log = { timestamp: new Date().toISOString(), message, data };
-    window.requestLogs.push(log);
-    // Keep only last 50 logs
-    if (window.requestLogs.length > 50) window.requestLogs.shift();
-    // Also log to console
+  const log = { timestamp: new Date().toISOString(), message, data };
+  window.requestLogs.push(log);
+  // Keep only last 20 logs to reduce client memory usage
+  if (window.requestLogs.length > 20) window.requestLogs.shift();
+  // Only output to console in development to avoid noisy production logs
+  if (import.meta.env.DEV) {
     console.log(`${log.timestamp}: ${message}`, data);
+  }
 };
 
 // Expose logs globally for debugging
@@ -26,11 +28,11 @@ window.viewAuthLogs = () => {
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    window.addLog('Request Config', {
-        url: config.url,
-        token: token ? token.substring(0, 20) + '...' : 'none',
-        method: config.method
-    });
+  // Minimal request logging; in production this won't echo to console
+  window.addLog('Request', {
+    url: config.url,
+    method: config.method
+  });
 
     if (token) {
       config.headers.Authorization = token; 
@@ -46,20 +48,18 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor to handle authentication errors
 axiosInstance.interceptors.response.use(
   (response) => {
-    window.addLog('Response Success', {
-        url: response.config.url,
-        status: response.status,
-        data: response.data ? 'Has Data' : 'No Data'
-    });
+  window.addLog('Response Success', {
+    url: response.config.url,
+    status: response.status
+  });
     return response;
   },
   (error) => {
-    window.addLog('Response Error', {
-        url: error.config?.url,
-        status: error.response?.status,
-        message: error.message,
-        details: error.response?.data
-    });
+  window.addLog('Response Error', {
+    url: error.config?.url,
+    status: error.response?.status,
+    message: error.message
+  });
 
     if (error.response?.status === 401 || error.response?.status === 403) {
       window.addLog('Auth Error - Clearing credentials', {

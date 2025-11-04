@@ -124,12 +124,17 @@ export default function PublicRoutes() {
                                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                             >
                                 <option value="">Show All Routes</option>
-                                {routesWithStops.length > 0 ? (
-                                    routesWithStops.map(route => (
-                                        <option key={route.id} value={route.id}>{route.name} ({route.direction})</option>
-                                    ))
+                                {routes.length > 0 ? (
+                                    routes.map(route => {
+                                        const hasLocation = (route.stops || []).some(rs => rs.stop && rs.stop.latitude && rs.stop.longitude);
+                                        return (
+                                            <option key={route.id} value={route.id}>
+                                                {route.name} ({route.direction}){!hasLocation ? ' — no location' : ''}
+                                            </option>
+                                        );
+                                    })
                                 ) : (
-                                    <option disabled>No routes with location data found</option>
+                                    <option disabled>No routes available</option>
                                 )}
                             </select>
                         </div>
@@ -211,9 +216,9 @@ export default function PublicRoutes() {
                             {selectedRoute ? (
                                 <ul className="space-y-3">
                                     {(selectedRoute.stops || []).map(rs => (
-                                        <li key={rs.id} className="flex items-center text-gray-700">
+                                        <li key={`stop-${rs.id ?? rs.stop?.id ?? rs.stopOrder}`} className="flex items-center text-gray-700">
                                             <span className="flex-shrink-0 h-6 w-6 text-sm bg-blue-900 text-yellow-400 rounded-full flex items-center justify-center font-bold mr-3">{rs.stopOrder}</span>
-                                            <span>{rs.stop.name}</span>
+                                            <span>{rs.stop?.name || 'Unnamed Stop'}</span>
                                         </li>
                                     ))}
                                 </ul>
