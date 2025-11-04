@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://turntable.proxy.rlwy.net/api'
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://urbansync-production-59e1.up.railway.app/api'
 });
 
 // Create a persistent log array
