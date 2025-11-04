@@ -140,26 +140,37 @@ export default function PublicSchedule() {
                     axiosInstance.get('/api/stops')
                 ]);
 
-                // Fetch stops for each route that was returned
+                // Fetch stops for each route that was returned and build a stop map
                 const routeStopsPromises = routesRes.data.map(route =>
                     axiosInstance.get(`/api/routes/${route.id}/stops`)
                 );
                 const routeStopsResponses = await Promise.all(routeStopsPromises);
 
-                // Create a map of routeId -> stops array
+                // Create a map of stopId -> stop (from stopsRes) so we can attach coordinates/names
+                const stopMap = (stopsRes.data || []).reduce((m, s) => {
+                    m[s.id] = s;
+                    return m;
+                }, {});
+
+                // Create a map of routeId -> enriched stops array (attach nested `stop` object expected by UI)
                 const routeStopsMap = routesRes.data.reduce((acc, route, index) => {
-                    acc[route.id] = routeStopsResponses[index].data;
+                    const rawStops = routeStopsResponses[index].data || [];
+                    acc[route.id] = rawStops.map(rs => ({
+                        ...rs,
+                        stop: stopMap[rs.stopId] ? stopMap[rs.stopId] : { id: rs.stopId, name: rs.stopName }
+                    }));
                     return acc;
                 }, {});
 
-                // Enrich the route object within each schedule with the stops data (guard if schedule.route missing)
+                // Enrich the route object within each schedule with the stops data (support flat ScheduleResponse with routeId)
                 const schedulesWithFullRouteData = schedulesRes.data.map(schedule => {
-                    const routeId = schedule.route?.id;
+                    const routeId = schedule.route?.id ?? schedule.routeId;
+                    const routeInfo = routesRes.data.find(r => r.id === routeId) || { id: routeId, name: schedule.routeName || 'Route', direction: '' };
                     const stopsForRoute = routeId ? (routeStopsMap[routeId] || []) : [];
                     return {
                         ...schedule,
                         route: {
-                            ...schedule.route,
+                            ...routeInfo,
                             stops: stopsForRoute.sort((a, b) => a.stopOrder - b.stopOrder)
                         }
                     };
@@ -182,7 +193,9 @@ export default function PublicSchedule() {
     const paginatedData = useMemo(() => {
         const items = view === 'route'
             ? Object.values(schedules.reduce((acc, schedule) => {
-                const routeId = schedule.route.id;
+                const routeId = schedule.route?.id;
+                // Skip schedules without a route
+                if (!routeId) return acc;
                 if (!acc[routeId]) {
                     acc[routeId] = { routeInfo: schedule.route, schedules: [] };
                 }
