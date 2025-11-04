@@ -37,6 +37,24 @@ public class RouteStopService {
     }
 
     @Transactional(readOnly = true)
+    public List<RouteStopResponse> getStopsForRouteResponses(Long routeId) {
+        if (!routeRepository.existsById(routeId)) {
+            throw new ResourceNotFoundException("Route not found with id: " + routeId);
+        }
+        List<RouteStop> routeStops = routeStopRepository.findByRouteIdOrderByStopOrderAsc(routeId);
+        List<RouteStopResponse> responses = new ArrayList<>();
+        for (RouteStop rs : routeStops) {
+            Long rId = rs.getRoute() != null ? rs.getRoute().getId() : null;
+            String routeName = rs.getRoute() != null ? rs.getRoute().getName() : null;
+            Long stopId = rs.getStop() != null ? rs.getStop().getId() : null;
+            String stopName = rs.getStop() != null ? rs.getStop().getName() : null;
+            responses.add(new RouteStopResponse(rs.getId(), rId, routeName, stopId, stopName,
+                    rs.getStopOrder(), rs.getArrivalTime(), rs.getDepartureTime(), rs.getRemarks()));
+        }
+        return responses;
+    }
+
+    @Transactional(readOnly = true)
     public List<RouteStop> getAllRouteStops() {
         return routeStopRepository.findAll();
     }

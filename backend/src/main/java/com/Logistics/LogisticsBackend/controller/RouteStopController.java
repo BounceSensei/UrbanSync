@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Logistics.LogisticsBackend.model.RouteStop;
 import com.Logistics.LogisticsBackend.payload.request.RouteStopRequest;
 import com.Logistics.LogisticsBackend.payload.response.MessageResponse;
+import com.Logistics.LogisticsBackend.payload.response.RouteStopResponse;
 import com.Logistics.LogisticsBackend.security.services.RouteStopService;
 
 import jakarta.validation.Valid;
@@ -29,8 +30,8 @@ public class RouteStopController {
     private RouteStopService routeStopService;
 
     @GetMapping
-    public ResponseEntity<List<RouteStop>> getStopsForRoute(@PathVariable Long routeId) {
-        List<RouteStop> stops = routeStopService.getStopsForRoute(routeId);
+    public ResponseEntity<List<RouteStopResponse>> getStopsForRoute(@PathVariable Long routeId) {
+        List<RouteStopResponse> stops = routeStopService.getStopsForRouteResponses(routeId);
         return ResponseEntity.ok(stops);
     }
 
