@@ -53,11 +53,26 @@ export default function PublicRoutes() {
                     axiosInstance.get(`/api/routes/${route.id}/stops`, { signal: controller.signal })
                 );
 
-                const routeStopsResponses = await Promise.all(routeStopsPromises);
+                // Also fetch the global stops list so we can resolve coordinates
+                const stopsResPromise = axiosInstance.get('/api/stops', { signal: controller.signal });
 
-                // Create a map of route IDs to their stops
+                const routeStopsResponses = await Promise.all(routeStopsPromises);
+                const stopsRes = await stopsResPromise;
+
+                // Create a map of stopId -> stop (with lat/lon if present)
+                const stopMap = (stopsRes.data || []).reduce((m, s) => {
+                    m[s.id] = s;
+                    return m;
+                }, {});
+
+                // Create a map of route IDs to their stops (and attach nested `stop` object expected by the UI)
                 const routeStopsMap = routesRes.data.reduce((acc, route, index) => {
-                    acc[route.id] = routeStopsResponses[index].data;
+                    const rawStops = routeStopsResponses[index].data || [];
+                    // Map flat RouteStopResponse to the shape the frontend expects: { ...rs, stop: { id, name, latitude, longitude } }
+                    acc[route.id] = rawStops.map(rs => ({
+                        ...rs,
+                        stop: stopMap[rs.stopId] ? stopMap[rs.stopId] : { id: rs.stopId, name: rs.stopName }
+                    }));
                     return acc;
                 }, {});
 
