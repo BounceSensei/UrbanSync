@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.Logistics.LogisticsBackend.model.Schedule;
+import com.Logistics.LogisticsBackend.payload.response.ScheduleResponse;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
@@ -19,4 +20,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findOverlappingSchedulesForBus(@Param("busId") Long busId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("scheduleId") Long scheduleId);
 
     List<Schedule> findByRouteIdAndDepartureDateTimeBetween(Long routeId, LocalDateTime start, LocalDateTime end);
+
+    // Projection to safely fetch schedule scalar data using LEFT JOINs to avoid EntityNotFound exceptions
+    @org.springframework.data.jpa.repository.Query("SELECT new com.Logistics.LogisticsBackend.payload.response.ScheduleResponse(s.id, d.id, b.id, r.id, s.departureDateTime, s.estimatedArrivalDateTime, s.status) FROM Schedule s LEFT JOIN s.driver d LEFT JOIN s.bus b LEFT JOIN s.route r")
+    List<ScheduleResponse> findAllAsDto();
 }

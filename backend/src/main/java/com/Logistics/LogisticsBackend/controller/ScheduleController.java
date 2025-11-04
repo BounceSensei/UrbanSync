@@ -33,7 +33,8 @@ public class ScheduleController {
     @GetMapping
     public ResponseEntity<?> getAllSchedules() {
         try {
-            return ResponseEntity.ok(scheduleService.getAllSchedules());
+            // Use safe DTO projection to avoid EntityNotFound when related entities are missing
+            return ResponseEntity.ok(scheduleService.getAllSchedulesDto());
         } catch (Exception e) {
             logger.error("Error fetching schedules", e);
             return ResponseEntity.status(500).body(new MessageResponse("Internal Server Error: " + e.getMessage()));

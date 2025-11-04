@@ -16,6 +16,7 @@ import com.Logistics.LogisticsBackend.model.RouteStop;
 import com.Logistics.LogisticsBackend.model.Schedule;
 import com.Logistics.LogisticsBackend.model.User;
 import com.Logistics.LogisticsBackend.payload.request.ScheduleRequest;
+import com.Logistics.LogisticsBackend.payload.response.ScheduleResponse;
 import com.Logistics.LogisticsBackend.repository.BusRepository;
 import com.Logistics.LogisticsBackend.repository.RouteRepository;
 import com.Logistics.LogisticsBackend.repository.RouteStopRepository;
@@ -42,6 +43,11 @@ public class ScheduleService {
 
     public List<Schedule> getAllSchedules() {
         return scheduleRepository.findAll();
+    }
+
+    // Safe DTO fetch to avoid lazy-loading and missing-related-entity errors during serialization
+    public List<ScheduleResponse> getAllSchedulesDto() {
+        return scheduleRepository.findAllAsDto();
     }
 
     @Transactional
