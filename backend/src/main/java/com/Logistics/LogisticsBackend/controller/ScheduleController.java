@@ -1,7 +1,7 @@
 package com.Logistics.LogisticsBackend.controller;
 
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,9 +28,16 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
+    private static final Logger logger = LoggerFactory.getLogger(ScheduleController.class);
+
     @GetMapping
-    public List<Schedule> getAllSchedules() {
-        return scheduleService.getAllSchedules();
+    public ResponseEntity<?> getAllSchedules() {
+        try {
+            return ResponseEntity.ok(scheduleService.getAllSchedules());
+        } catch (Exception e) {
+            logger.error("Error fetching schedules", e);
+            return ResponseEntity.status(500).body(new MessageResponse("Internal Server Error: " + e.getMessage()));
+        }
     }
 
     @PostMapping
