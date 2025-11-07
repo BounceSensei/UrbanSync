@@ -65,6 +65,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
             "https://urban-sync.vercel.app",
+            "https://urbansync-production-59e1.up.railway.app",
             "http://localhost:5173",
             "http://127.0.0.1:5173"
         ));
