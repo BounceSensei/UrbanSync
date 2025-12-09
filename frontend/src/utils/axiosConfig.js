@@ -21,21 +21,22 @@ window.addLog = (message, data) => {
 
 // Expose logs globally for debugging
 window.viewAuthLogs = () => {
-    console.table(window.requestLogs);
+  console.table(window.requestLogs);
 };
 
 // Add a request interceptor to add the token to all requests
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-  // Minimal request logging; in production this won't echo to console
-  window.addLog('Request', {
-    url: config.url,
-    method: config.method
-  });
+    // Minimal request logging; in production this won't echo to console
+    window.addLog('Request', {
+      url: config.url,
+      method: config.method
+    });
 
-    if (token) {
-      config.headers.Authorization = token; 
+    // Only add Authorization header if token exists and is not empty/null
+    if (token && token !== 'null' && token !== 'undefined' && token.trim() !== '') {
+      config.headers.Authorization = token;
     }
     return config;
   },
@@ -48,18 +49,18 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor to handle authentication errors
 axiosInstance.interceptors.response.use(
   (response) => {
-  window.addLog('Response Success', {
-    url: response.config.url,
-    status: response.status
-  });
+    window.addLog('Response Success', {
+      url: response.config.url,
+      status: response.status
+    });
     return response;
   },
   (error) => {
-  window.addLog('Response Error', {
-    url: error.config?.url,
-    status: error.response?.status,
-    message: error.message
-  });
+    window.addLog('Response Error', {
+      url: error.config?.url,
+      status: error.response?.status,
+      message: error.message
+    });
 
     if (error.response?.status === 401 || error.response?.status === 403) {
       window.addLog('Auth Error - Clearing credentials', {
